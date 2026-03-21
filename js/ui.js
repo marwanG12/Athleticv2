@@ -4,7 +4,6 @@ window.UI = (function() {
   var currentDay = 'lundi';
   var currentScreen = 'seance';
 
-  var days = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
   var dayLetters = { lundi: 'L', mardi: 'M', mercredi: 'M', jeudi: 'J', vendredi: 'V', samedi: 'S', dimanche: 'D' };
 
   function filterBlocksForWeek(blocks, week) {

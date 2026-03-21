@@ -1,6 +1,6 @@
 // Athletic 18W - Timer with SVG Ring
 window.Timer = (function() {
-  var CIRC = 2 * Math.PI * 85; // ≈ 533.98
+  var CIRC = 2 * Math.PI * 85; // r=85 matches SVG circle radius in index.html — circumference ≈ 533.98
   var totalSeconds = 0;
   var remaining = 0;
   var interval = null;
