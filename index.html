@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Athletic">
+    <title>Athletic - Programme 18 Semaines</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Écran Séance -->
+        <div id="screen-seance" class="screen active">
+            <header class="app-header">
+                <div class="week-nav">
+                    <button id="prev-week" class="week-arrow">←</button>
+                    <h1 id="week-title">Semaine 1</h1>
+                    <button id="next-week" class="week-arrow">→</button>
+                </div>
+                <div id="phase-banner" class="phase-banner phase-1">
+                    <div class="phase-info">
+                        <span class="phase-name">Phase 1 - Construction</span>
+                        <span class="phase-weeks">Semaines 1-6</span>
+                    </div>
+                    <div class="phase-progress">
+                        <div id="phase-progress-bar" class="phase-progress-bar"></div>
+                    </div>
+                </div>
+                <div id="progress-bar" class="progress-container">
+                    <div class="progress-text"><span id="progress-count">0/0</span> exercices</div>
+                    <div class="progress-track">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="day-selector">
+                <button class="day-btn" data-day="lundi">L</button>
+                <button class="day-btn" data-day="mardi">M</button>
+                <button class="day-btn off" data-day="mercredi">M</button>
+                <button class="day-btn" data-day="jeudi">J</button>
+                <button class="day-btn" data-day="vendredi">V</button>
+                <button class="day-btn" data-day="samedi">S</button>
+                <button class="day-btn off" data-day="dimanche">D</button>
+            </div>
+
+            <main id="seance-content" class="seance-content">
+                <!-- Contenu dynamique -->
+            </main>
+        </div>
+
+        <!-- Écran Historique -->
+        <div id="screen-historique" class="screen">
+            <header class="app-header">
+                <h1>Historique</h1>
+            </header>
+            <main class="content-padded">
+                <div class="select-wrapper">
+                    <select id="exercise-select" class="exercise-select">
+                        <option value="">Sélectionner un exercice</option>
+                    </select>
+                </div>
+                <div id="history-table" class="history-table"></div>
+                <div id="history-chart-container" class="chart-container">
+                    <canvas id="history-chart"></canvas>
+                </div>
+            </main>
+        </div>
+
+        <!-- Écran Tests -->
+        <div id="screen-tests" class="screen">
+            <header class="app-header">
+                <h1>Tests de Référence</h1>
+            </header>
+            <main class="content-padded">
+                <div class="test-forms">
+                    <div class="test-form-card">
+                        <h3>Sprint 10m (s)</h3>
+                        <div class="test-inputs">
+                            <input type="number" step="0.01" id="test-sprint10" placeholder="Ex: 1.85">
+                            <button onclick="UI.saveTestValue('sprint10')">Enregistrer</button>
+                        </div>
+                        <div class="test-objective">Départ: 2.0-2.1s → Objectif: 1.75-1.85s</div>
+                    </div>
+                    <div class="test-form-card">
+                        <h3>Sprint 30m (s)</h3>
+                        <div class="test-inputs">
+                            <input type="number" step="0.01" id="test-sprint30" placeholder="Ex: 4.3">
+                            <button onclick="UI.saveTestValue('sprint30')">Enregistrer</button>
+                        </div>
+                        <div class="test-objective">Départ: 4.8-5.0s → Objectif: 4.2-4.5s</div>
+                    </div>
+                    <div class="test-form-card">
+                        <h3>CMJ (cm)</h3>
+                        <div class="test-inputs">
+                            <input type="number" step="0.1" id="test-cmj" placeholder="Ex: 45">
+                            <button onclick="UI.saveTestValue('cmj')">Enregistrer</button>
+                        </div>
+                        <div class="test-objective">Départ: 35-38cm → Objectif: 45-50cm</div>
+                    </div>
+                    <div class="test-form-card">
+                        <h3>Squat 5RM (kg)</h3>
+                        <div class="test-inputs">
+                            <input type="number" step="0.5" id="test-squat5rm" placeholder="Ex: 100">
+                            <button onclick="UI.saveTestValue('squat5rm')">Enregistrer</button>
+                        </div>
+                        <div class="test-objective">Départ: 60-70kg → Objectif: 100-115kg</div>
+                    </div>
+                    <div class="test-form-card">
+                        <h3>Développé 5RM (kg)</h3>
+                        <div class="test-inputs">
+                            <input type="number" step="0.5" id="test-bench5rm" placeholder="Ex: 80">
+                            <button onclick="UI.saveTestValue('bench5rm')">Enregistrer</button>
+                        </div>
+                        <div class="test-objective">Départ: 50-60kg → Objectif: 80-90kg</div>
+                    </div>
+                    <div class="test-form-card">
+                        <h3>Tractions (reps)</h3>
+                        <div class="test-inputs">
+                            <input type="number" id="test-tractions" placeholder="Ex: 10">
+                            <button onclick="UI.saveTestValue('tractions')">Enregistrer</button>
+                        </div>
+                        <div class="test-objective">Départ: 3-5 reps → Objectif: 10-12 reps</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="tests-chart"></canvas>
+                </div>
+            </main>
+        </div>
+
+        <!-- Écran Nutrition -->
+        <div id="screen-nutrition" class="screen">
+            <header class="app-header">
+                <h1>Nutrition</h1>
+            </header>
+            <main class="content-padded">
+                <div class="nutrition-section">
+                    <h2>Macronutriments</h2>
+                    <div class="macro-card">
+                        <div class="macro-item">
+                            <span class="macro-label">Calories</span>
+                            <span class="macro-value">2400-2500 kcal/j</span>
+                        </div>
+                        <div class="macro-item">
+                            <span class="macro-label">Protéines</span>
+                            <span class="macro-value">160-195g/j (1.8-2.2g/kg)</span>
+                        </div>
+                        <div class="macro-item">
+                            <span class="macro-label">Glucides</span>
+                            <span class="macro-value">270-350g/j</span>
+                        </div>
+                        <div class="macro-item">
+                            <span class="macro-label">Lipides</span>
+                            <span class="macro-value">70-90g/j</span>
+                        </div>
+                        <div class="macro-item">
+                            <span class="macro-label">Hydratation</span>
+                            <span class="macro-value">2.5-3L/j</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nutrition-section">
+                    <h2>Compléments</h2>
+                    <div class="supplement-card">
+                        <div class="supplement-item">
+                            <span class="supplement-name">Créatine</span>
+                            <span class="supplement-dose">5g/jour</span>
+                        </div>
+                        <div class="supplement-item">
+                            <span class="supplement-name">Whey Protéine</span>
+                            <span class="supplement-dose">1-2 scoops/jour</span>
+                        </div>
+                        <div class="supplement-item">
+                            <span class="supplement-name">Vitamine D</span>
+                            <span class="supplement-dose">2000-4000 UI/jour</span>
+                        </div>
+                        <div class="supplement-item">
+                            <span class="supplement-name">Oméga-3</span>
+                            <span class="supplement-dose">2-3g EPA+DHA/jour</span>
+                        </div>
+                        <div class="supplement-item">
+                            <span class="supplement-name">Magnésium</span>
+                            <span class="supplement-dose">300-400mg/jour</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-screen="seance">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                <span>Séance</span>
+            </button>
+            <button class="nav-btn" data-screen="historique">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                <span>Historique</span>
+            </button>
+            <button class="nav-btn" data-screen="tests">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                <span>Tests</span>
+            </button>
+            <button class="nav-btn" data-screen="nutrition">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span>Nutrition</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Timer Sheet -->
+    <div id="timer-overlay" class="timer-overlay">
+        <div id="timer-sheet" class="timer-sheet">
+            <div class="timer-header">
+                <h2>Repos</h2>
+                <button id="timer-close" class="timer-close-btn">×</button>
+            </div>
+            <div class="timer-circle-container">
+                <svg class="timer-svg" viewBox="0 0 200 200">
+                    <circle class="timer-track" cx="100" cy="100" r="85"/> 
+                    <circle id="timer-progress-circle" class="timer-progress" cx="100" cy="100" r="85"/>
+                </svg>
+                <div id="timer-display" class="timer-display">00:00</div>
+            </div>
+            <div class="timer-controls">
+                <button id="timer-start" class="timer-btn primary">Lancer</button>
+                <button id="timer-pause" class="timer-btn" style="display:none;">Pause</button>
+                <button id="timer-resume" class="timer-btn" style="display:none;">Reprendre</button>
+                <button id="timer-reset" class="timer-btn">Relancer</button>
+            </div>
+            <div class="timer-adjustments">
+                <button class="timer-adjust-btn" data-adjust="-30">-30s</button>
+                <button class="timer-adjust-btn" data-adjust="-15">-15s</button>
+                <button class="timer-adjust-btn" data-adjust="15">+15s</button>
+                <button class="timer-adjust-btn" data-adjust="30">+30s</button>
+                <button class="timer-adjust-btn" data-adjust="60">+1min</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>
