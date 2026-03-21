@@ -1,6 +1,8 @@
 // Athletic 18W - Timer with SVG Ring
 window.Timer = (function() {
-  var CIRC = 2 * Math.PI * 85; // r=85 matches SVG circle radius in index.html — circumference ≈ 533.98
+  // TIMER_CIRCLE_RADIUS must match the 'r' attribute of #timer-progress-circle in index.html
+  var TIMER_CIRCLE_RADIUS = 85;
+  var CIRC = 2 * Math.PI * TIMER_CIRCLE_RADIUS; // circumference ≈ 533.98
   var totalSeconds = 0;
   var remaining = 0;
   var interval = null;
@@ -112,6 +114,13 @@ window.Timer = (function() {
     }
   }
 
+  function closeTimer() {
+    running = false;
+    if (interval) { clearInterval(interval); interval = null; }
+    var overlay = getEl('timer-overlay');
+    if (overlay) overlay.classList.remove('open');
+  }
+
   function wireButtons() {
     var start  = getEl('timer-start');
     var pause  = getEl('timer-pause');
@@ -136,9 +145,9 @@ window.Timer = (function() {
       updateDisplay();
       showControls('idle');
     });
-    if (closeBtn) closeBtn.addEventListener('click', function() { Timer.close(); });
+    if (closeBtn) closeBtn.addEventListener('click', closeTimer);
     if (overlay) overlay.addEventListener('click', function(e) {
-      if (e.target === overlay) Timer.close();
+      if (e.target === overlay) closeTimer();
     });
 
     var adjustBtns = document.querySelectorAll('.timer-adjust-btn');
@@ -181,12 +190,7 @@ window.Timer = (function() {
       if (overlay) overlay.classList.add('open');
     },
 
-    close: function() {
-      running = false;
-      if (interval) { clearInterval(interval); interval = null; }
-      var overlay = getEl('timer-overlay');
-      if (overlay) overlay.classList.remove('open');
-    },
+    close: closeTimer,
 
     toggle: function() {
       var overlay = getEl('timer-overlay');

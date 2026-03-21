@@ -69,6 +69,7 @@ window.Charts = (function() {
 
   return {
     renderCharges: function(canvasId, exerciseName) {
+      if (!window.Chart) return;
       var canvas = document.getElementById(canvasId);
       if (!canvas) return;
       destroyIfExists(canvasId);
@@ -118,6 +119,7 @@ window.Charts = (function() {
     },
 
     renderTests: function(canvasId, testType) {
+      if (!window.Chart) return;
       var canvas = document.getElementById(canvasId);
       if (!canvas) return;
       destroyIfExists(canvasId);

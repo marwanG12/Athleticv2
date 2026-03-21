@@ -4,7 +4,7 @@ window.UI = (function() {
   var currentDay = 'lundi';
   var currentScreen = 'seance';
 
-  var dayLetters = { lundi: 'L', mardi: 'M', mercredi: 'M', jeudi: 'J', vendredi: 'V', samedi: 'S', dimanche: 'D' };
+  var dayAbbreviations = { lundi: 'L', mardi: 'M', mercredi: 'M', jeudi: 'J', vendredi: 'V', samedi: 'S', dimanche: 'D' };
 
   function filterBlocksForWeek(blocks, week) {
     var filtered = [];
@@ -220,7 +220,7 @@ window.UI = (function() {
       var dm = PROGRAM.dayMap[day];
       btn.className = 'day-btn' + (dm.off ? ' off' : '') + (day === selectedDay ? ' active' : '');
 
-      btn.innerHTML = dayLetters[day] +
+      btn.innerHTML = dayAbbreviations[day] +
         '<span class="day-tag day-tag-' + dm.tag + '">' + dm.tag + '</span>';
 
       btn.onclick = function() {
