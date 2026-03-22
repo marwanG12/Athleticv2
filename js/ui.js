@@ -107,21 +107,58 @@ window.UI = (function() {
       main.appendChild(el('p', 'ex-note', ex.note));
     }
 
-    // Charge input
+    // Charge input – structured (kg + reps)
     var chargeRow = el('div', 'ex-charge-row');
     chargeRow.appendChild(el('span', 'ex-charge-label', 'Charge:'));
-    var input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'ex-charge-input';
-    input.placeholder = 'ex: 80kg × 3';
-    input.value = charge || '';
-    input.addEventListener('blur', function() {
-      window.Storage.saveCharge(week, day, ex.id, input.value.trim());
-    });
-    input.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') input.blur();
-    });
-    chargeRow.appendChild(input);
+
+    // Parse stored value: object {kg, reps} or legacy string
+    var storedKg = '', storedReps = '';
+    if (charge && typeof charge === 'object') {
+      storedKg  = charge.kg  != null ? String(charge.kg)  : '';
+      storedReps = charge.reps != null ? String(charge.reps) : '';
+    } else if (charge && typeof charge === 'string') {
+      var legacyNums = charge.match(/(\d+(?:\.\d+)?)/g);
+      if (legacyNums && legacyNums.length >= 1) storedKg   = legacyNums[0];
+      if (legacyNums && legacyNums.length >= 2) storedReps = legacyNums[1];
+    }
+
+    var kgInput = document.createElement('input');
+    kgInput.type = 'number';
+    kgInput.className = 'ex-charge-kg';
+    kgInput.placeholder = 'kg';
+    kgInput.value = storedKg;
+    kgInput.min = '0';
+    kgInput.step = '2.5';
+    chargeRow.appendChild(kgInput);
+
+    chargeRow.appendChild(el('span', 'ex-charge-sep', '×'));
+
+    var repsInput = document.createElement('input');
+    repsInput.type = 'number';
+    repsInput.className = 'ex-charge-reps';
+    repsInput.placeholder = 'reps';
+    repsInput.value = storedReps;
+    repsInput.min = '1';
+    repsInput.step = '1';
+    chargeRow.appendChild(repsInput);
+
+    function saveChargeStructured() {
+      var kg   = kgInput.value.trim();
+      var reps = repsInput.value.trim();
+      if (kg === '' && reps === '') {
+        window.Storage.saveCharge(week, day, ex.id, '');
+      } else {
+        window.Storage.saveCharge(week, day, ex.id, {
+          kg:   kg   !== '' ? parseFloat(kg)   : null,
+          reps: reps !== '' ? parseInt(reps, 10) : null
+        });
+      }
+    }
+    kgInput.addEventListener('blur',  saveChargeStructured);
+    repsInput.addEventListener('blur', saveChargeStructured);
+    kgInput.addEventListener('keydown',  function(e) { if (e.key === 'Enter') kgInput.blur(); });
+    repsInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') repsInput.blur(); });
+
     main.appendChild(chargeRow);
 
     item.appendChild(main);
@@ -362,7 +399,8 @@ window.UI = (function() {
   return {
     init: function() {
       currentWeek = window.Storage.loadWeek();
-      currentDay = 'lundi';
+      var dayNames = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+      currentDay = dayNames[new Date().getDay()];
 
       // Wire week navigation
       var prevBtn = document.getElementById('prev-week');
@@ -483,7 +521,12 @@ window.UI = (function() {
         html += '<tr>' +
           '<td>S' + r.week + '</td>' +
           '<td>' + r.day.charAt(0).toUpperCase() + r.day.slice(1) + '</td>' +
-          '<td>' + (r.charge || '–') + '</td>' +
+          '<td>' + (r.charge
+            ? (typeof r.charge === 'object'
+                ? [(r.charge.kg  != null ? r.charge.kg + ' kg' : ''),
+                   (r.charge.reps != null ? '× ' + r.charge.reps  : '')].filter(Boolean).join(' ')
+                : r.charge)
+            : '–') + '</td>' +
           '<td class="history-check">' + (r.checked ? '✓' : '') + '</td>' +
         '</tr>';
       });

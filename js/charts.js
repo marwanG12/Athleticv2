@@ -90,7 +90,12 @@ window.Charts = (function() {
               if (ex.name === exerciseName) {
                 var charge = window.Storage.loadCharge(week, day, ex.id);
                 if (charge) {
-                  var num = parseFloat(charge);
+                  var num;
+                  if (typeof charge === 'object') {
+                    num = charge.kg != null ? charge.kg : NaN;
+                  } else {
+                    num = parseFloat(charge);
+                  }
                   if (!isNaN(num)) {
                     labels.push('S' + week);
                     data.push(num);

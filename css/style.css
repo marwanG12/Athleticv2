@@ -437,6 +437,7 @@ body {
   margin-top: 4px;
 }
 .ex-charge-label { font-size: 11px; color: var(--muted2); }
+/* legacy – kept for backward compat */
 .ex-charge-input {
   background: var(--bg4);
   border: 1px solid var(--border);
@@ -448,9 +449,35 @@ body {
   width: 110px;
   -webkit-appearance: none;
 }
-.ex-charge-input:focus {
-  outline: none;
-  border-color: var(--accent);
+.ex-charge-input:focus { outline: none; border-color: var(--accent); }
+
+.ex-charge-kg,
+.ex-charge-reps {
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  padding: 4px 6px;
+  text-align: center;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+.ex-charge-kg  { width: 64px; }
+.ex-charge-reps { width: 52px; }
+.ex-charge-kg:focus,
+.ex-charge-reps:focus { outline: none; border-color: var(--accent); }
+/* hide native number spinners */
+.ex-charge-kg::-webkit-inner-spin-button,
+.ex-charge-kg::-webkit-outer-spin-button,
+.ex-charge-reps::-webkit-inner-spin-button,
+.ex-charge-reps::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+.ex-charge-sep {
+  font-size: 13px;
+  color: var(--muted2);
+  font-weight: 600;
 }
 
 .ex-note {
